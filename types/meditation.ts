@@ -10,4 +10,9 @@ export interface MeditationSettings {
   darkMode: boolean
   notifications: boolean
   defaultDuration: number
+}
+
+export interface Theme {
+  mainColor: string
+  bgImage: string
 } 

@@ -52,53 +52,61 @@ export default function WelcomePage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-blue-200 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg relative">
-        <h1 className="mb-6 text-center text-3xl font-semibold text-blue-600 tracking-tight">Welcome</h1>
+    <main 
+      className="flex min-h-screen flex-col items-center justify-center p-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/forest-bg.jpg')",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundBlend: "overlay"
+      }}
+    >
+      <div className="w-full max-w-md rounded-[2rem] bg-white/90 backdrop-blur-sm p-8 shadow-2xl relative border border-blue-900/10">
+        <h1 className="mb-6 text-center text-3xl font-semibold text-blue-900 tracking-tight">Welcome</h1>
         <Link href="/meditation" passHref>
-          <Button className="mb-6 w-full">Start Meditation</Button>
+          <Button className="mb-6 w-full bg-blue-900 hover:bg-blue-800 text-lg h-12 rounded-xl">
+            Start Meditation
+          </Button>
         </Link>
         {sessions.length > 0 ? (
           <div>
-            <h2 className="mb-4 text-xl font-semibold text-gray-700">Previous Sessions</h2>
+            <h2 className="mb-4 text-xl font-semibold text-blue-900">Previous Sessions</h2>
             <ul className="space-y-2">
-              {sessions.map((session) => (
+              {sessions.slice(0, 5).map((session) => (
                 <li 
                   key={session.id} 
                   onClick={() => setSelectedSession(session)}
-                  className="flex justify-between text-sm text-gray-600 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                  className="flex justify-between text-sm text-blue-900 p-3 hover:bg-blue-50 rounded-xl cursor-pointer border border-blue-100 transition-colors"
                 >
-                  <span>{formatTime(session.duration)}</span>
-                  <span>{formatDistanceToNow(new Date(session.date), { addSuffix: true })}</span>
+                  <span className="font-medium">{formatTime(session.duration)}</span>
+                  <span className="text-blue-700">{formatDistanceToNow(new Date(session.date), { addSuffix: true })}</span>
                 </li>
               ))}
             </ul>
           </div>
         ) : (
-          <p className="text-center text-gray-600">No previous sessions</p>
+          <p className="text-center text-blue-900/60">No previous sessions</p>
         )}
-        <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 font-light italic">
+        <span className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-blue-900/60 font-light italic">
           stay curious
         </span>
       </div>
 
       <Dialog open={!!selectedSession} onOpenChange={() => setSelectedSession(null)}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] rounded-2xl">
           <DialogHeader>
-            <DialogTitle>Session Options</DialogTitle>
+            <DialogTitle className="text-blue-900">Session Options</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <Button
               onClick={() => selectedSession && handleRepeat(selectedSession.duration)}
-              className="flex items-center gap-2"
-              variant="outline"
+              className="flex items-center gap-2 bg-blue-900 hover:bg-blue-800 h-12 rounded-xl"
             >
               <Timer className="h-4 w-4" />
               Repeat Session ({selectedSession && formatTime(selectedSession.duration)})
             </Button>
             <Button
               onClick={() => selectedSession && handleDelete(selectedSession.id)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 h-12 rounded-xl"
               variant="destructive"
             >
               <Trash2 className="h-4 w-4" />

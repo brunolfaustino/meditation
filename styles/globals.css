@@ -92,3 +92,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.forest-bg {
+  @apply bg-[url('/forest-bg.jpg')] bg-cover bg-center bg-no-repeat;
+}

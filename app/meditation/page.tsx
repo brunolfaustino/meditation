@@ -153,8 +153,15 @@ export default function MeditationTimer() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-blue-200 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+    <main 
+      className="flex min-h-screen flex-col items-center justify-center p-4 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/forest-bg.jpg')",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundBlend: "overlay"
+      }}
+    >
+      <div className="w-full max-w-md rounded-[2rem] bg-white/90 backdrop-blur-sm p-8 shadow-2xl relative border border-blue-900/10">
         <div className="mb-8 flex items-center justify-center">
           <Dialog open={isEditing} onOpenChange={handleEditDialogOpen}>
             <DialogTrigger asChild>
@@ -175,7 +182,7 @@ export default function MeditationTimer() {
                     fill="transparent"
                   />
                   <circle
-                    className="stroke-current text-blue-500"
+                    className="stroke-current text-blue-900"
                     strokeWidth="4"
                     strokeLinecap="round"
                     cx="50"
@@ -188,13 +195,13 @@ export default function MeditationTimer() {
                   />
                 </svg>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-center">
-                  <span className="text-4xl font-bold text-blue-600">{formatTime(timeLeft)}</span>
+                  <span className="text-4xl font-bold text-blue-900">{formatTime(timeLeft)}</span>
                 </div>
               </div>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="rounded-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Timer</DialogTitle>
+                <DialogTitle className="text-blue-900">Edit Timer</DialogTitle>
               </DialogHeader>
               <div className="flex items-center space-x-2">
                 <Input
@@ -203,23 +210,24 @@ export default function MeditationTimer() {
                   onChange={handleMinutesChange}
                   min={0}
                   max={59}
-                  className="w-20"
+                  className="w-20 rounded-xl border-blue-200 focus:border-blue-900 focus:ring-blue-900"
                   aria-label="Minutes"
                 />
-                <span>minutes</span>
+                <span className="text-blue-900">minutes</span>
                 <Input
                   type="number"
                   value={editSeconds}
                   onChange={handleSecondsChange}
                   min={0}
                   max={59}
-                  className="w-20"
+                  className="w-20 rounded-xl border-blue-200 focus:border-blue-900 focus:ring-blue-900"
                   aria-label="Seconds"
                 />
-                <span>seconds</span>
+                <span className="text-blue-900">seconds</span>
               </div>
               <Button 
                 onClick={handleEditSubmit}
+                className="bg-blue-900 hover:bg-blue-800 rounded-xl h-12"
                 aria-label="Save timer settings"
               >
                 Save
@@ -230,7 +238,7 @@ export default function MeditationTimer() {
         <div className="flex justify-center space-x-4">
           <Button 
             onClick={handleTimerToggle} 
-            className="w-24"
+            className="w-24 h-12 bg-blue-900 hover:bg-blue-800 rounded-xl"
             aria-label={isActive ? "Pause meditation timer" : "Start meditation timer"}
           >
             {isActive ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
@@ -238,7 +246,7 @@ export default function MeditationTimer() {
           <Button 
             onClick={handleTimerReset} 
             variant="outline" 
-            className="w-24"
+            className="w-24 h-12 border-blue-200 text-blue-900 hover:bg-blue-50 rounded-xl"
             aria-label="Reset meditation timer"
           >
             <RefreshCw className="h-5 w-5" />
@@ -247,7 +255,7 @@ export default function MeditationTimer() {
         <Button 
           onClick={() => router.push("/")} 
           variant="link" 
-          className="mt-4 w-full"
+          className="mt-4 w-full text-blue-900 hover:text-blue-800"
           aria-label="Return to home page"
         >
           Back to Home
