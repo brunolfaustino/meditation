@@ -6,6 +6,7 @@ import { Play, Pause, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { toast } from "@/hooks/use-toast"
 
 export default function MeditationTimer() {
   const [duration, setDuration] = useState(5 * 60) // Duration in seconds
@@ -45,6 +46,11 @@ export default function MeditationTimer() {
         audioRef.current.play()
       }
       saveSession()
+      toast({
+        title: "Session completed",
+        description: "Great job! Your meditation session is complete.",
+        duration: 3000,
+      })
     }
 
     return () => {
@@ -53,6 +59,19 @@ export default function MeditationTimer() {
       }
     }
   }, [isActive, timeLeft, duration])
+
+  useEffect(() => {
+    // Check for repeated session duration
+    const repeatDuration = sessionStorage.getItem("repeatDuration")
+    if (repeatDuration) {
+      const duration = parseInt(repeatDuration)
+      setDuration(duration)
+      setEditMinutes(Math.floor(duration / 60))
+      setEditSeconds(duration % 60)
+      // Clear the stored duration
+      sessionStorage.removeItem("repeatDuration")
+    }
+  }, [])
 
   const handleTimerToggle = () => {
     setIsActive(!isActive)
@@ -83,14 +102,47 @@ export default function MeditationTimer() {
   }
 
   const saveSession = () => {
-    const session = {
-      id: Date.now().toString(),
-      duration: Math.floor(duration / 60),
-      date: new Date().toISOString(),
+    // Only save if there was actual meditation time
+    if (duration - timeLeft > 0) {
+      const newSession = {
+        id: Date.now().toString(),
+        duration: duration - timeLeft,
+        date: new Date().toISOString(),
+      }
+      
+      try {
+        // Get existing sessions
+        const storedSessions = localStorage.getItem("meditationSessions")
+        let sessions = []
+        
+        if (storedSessions) {
+          sessions = JSON.parse(storedSessions)
+          
+          // Check if this exact session already exists (same duration and within last 2 seconds)
+          const now = Date.now()
+          const isDuplicate = sessions.some(session => {
+            const sessionTime = new Date(session.date).getTime()
+            return session.duration === newSession.duration && 
+                   Math.abs(now - sessionTime) < 2000
+          })
+          
+          if (isDuplicate) {
+            return // Don't save duplicate session
+          }
+        }
+        
+        // Add new session at the beginning
+        sessions.unshift(newSession)
+        
+        // Keep only the last 10 sessions
+        const updatedSessions = sessions.slice(0, 10)
+        
+        // Save back to localStorage
+        localStorage.setItem("meditationSessions", JSON.stringify(updatedSessions))
+      } catch (error) {
+        console.error("Error saving session:", error)
+      }
     }
-    const storedSessions = localStorage.getItem("meditationSessions")
-    const sessions = storedSessions ? JSON.parse(storedSessions) : []
-    localStorage.setItem("meditationSessions", JSON.stringify([session, ...sessions]))
   }
 
   const handleEditSubmit = () => {
