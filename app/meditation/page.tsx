@@ -156,8 +156,8 @@ export default function MeditationTimer() {
     <main 
       className="flex min-h-screen flex-col items-center justify-center p-4 bg-cover bg-center"
       style={{
-        backgroundImage: "url('/forest-bg.jpg')",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundImage: "url('/forest-background.jpg?v=1')",
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
         backgroundBlend: "overlay"
       }}
     >
